@@ -35,59 +35,60 @@ public class LessonServiceImpl implements LessonService {
     @Transactional
     @Override
     public HttpEntity<?> editLessonOfGroup(UUID groupId, LessonDTO lessonDTO) {
-        LessonProjection editingLesson = isNewElement(lessonDTO);
-        Room roomById = lessonDTO.getRoomId() == null ? null : roomRepository.findById(lessonDTO.getRoomId()).orElseGet(null);
-        Subject subjectById = lessonDTO.getSubjectId() == null ? null : subjectRepository.findById(lessonDTO.getSubjectId()).orElseGet(null);
-        Teacher teacherById = lessonDTO.getTeacherId() == null ? null : teacherRepository.findById(lessonDTO.getTeacherId()).orElseGet(null);
-        Group groupsById = groupRepository.findById(lessonDTO.getGroupId()).orElseGet(null);
-        WeekDay byName = weekDayRepository.findByName(WeekDays.valueOf(generateWeekDay(lessonDTO.getWeekday())));
-        System.out.println(editingLesson);
-        if (editingLesson == null) {
-            List<Group> groups = new ArrayList<>();
-            groups.add(groupsById);
-            return ResponseEntity.ok(lessonRepository.save(new Lesson(
-                    null,
-                    subjectById,
-                    roomById,
-                    groups,
-                    teacherById,
-                    false,
-                    lessonDTO.getPara(),
-                    byName
-            )));
-        } else {
-            Lesson editingLessonReal = lessonRepository.findById(editingLesson.getId()).get();
-            editingLessonReal.setPara(lessonDTO.getPara());
-            if (roomById != null) {
-                editingLessonReal.setRoom(roomById);
-            }
-            editingLessonReal.setType(false);
-            editingLessonReal.setWeekDay(byName);
-            if (teacherById != null) {
-                editingLessonReal.setTeacher(teacherById);
-            }
-            if(subjectById!=null) {
-            editingLessonReal.setSubject(subjectById);
-            }
-            return ResponseEntity.ok(lessonRepository.save(editingLessonReal));
-        }
+//        LessonProjection editingLesson = isNewElement(lessonDTO);
+//        Room roomById = lessonDTO.getRoomId() == null ? null : roomRepository.findById(lessonDTO.getRoomId()).orElseGet(null);
+//        Subject subjectById = lessonDTO.getSubjectId() == null ? null : subjectRepository.findById(lessonDTO.getSubjectId()).orElseGet(null);
+//        Teacher teacherById = lessonDTO.getTeacherId() == null ? null : teacherRepository.findById(lessonDTO.getTeacherId()).orElseGet(null);
+//        Group groupsById = groupRepository.findById(lessonDTO.getGroupId()).orElseGet(null);
+//        WeekDay byName = weekDayRepository.findByName(WeekDays.valueOf(generateWeekDay(lessonDTO.getWeekday())));
+//        System.out.println(editingLesson);
+//        if (editingLesson == null) {
+//            List<Group> groups = new ArrayList<>();
+//            groups.add(groupsById);
+//            return ResponseEntity.ok(lessonRepository.save(new Lesson(
+//                    null,
+//                    subjectById,
+//                    roomById,
+//                    groups,
+//                    teacherById,
+//                    false,
+//                    lessonDTO.getPara(),
+//                    byName
+//            )));
+//        } else {
+//            Lesson editingLessonReal = lessonRepository.findById(editingLesson.getId()).get();
+//            editingLessonReal.setPara(lessonDTO.getPara());
+//            if (roomById != null) {
+//                editingLessonReal.setRoom(roomById);
+//            }
+//            editingLessonReal.setType(false);
+//            editingLessonReal.setWeekDay(byName);
+//            if (teacherById != null) {
+//                editingLessonReal.setTeacher(teacherById);
+//            }
+//            if(subjectById!=null) {
+//            editingLessonReal.setSubject(subjectById);
+//            }
+//            return ResponseEntity.ok(lessonRepository.save(editingLessonReal));
+        return null;
     }
 
     @Override
     public Object findByGroupId(UUID groupId) {
-        Group group = groupRepository.findById(groupId).get();
+        Group group = groupRepository.findById(groupId).orElseThrow();
         return ResponseEntity.ok(lessonRepository.findByGroup(group));
     }
 
-    private LessonProjection isNewElement(LessonDTO lessonDTO) {
-        String s = generateWeekDay(lessonDTO.getWeekday());
-        Optional<LessonProjection> byGroupAndRoomAndParaAndWeekDay = lessonRepository.findByGroupAndRoomAndParaAndWeekDay(lessonDTO.getGroupId(), lessonDTO.getPara(), s);
-        return byGroupAndRoomAndParaAndWeekDay.isPresent() ? byGroupAndRoomAndParaAndWeekDay.get() : null;
-    }
+//    private LessonProjection isNewElement(LessonDTO lessonDTO) {
+//        String s = generateWeekDay(lessonDTO.getWeekId());
+//        Optional<LessonProjection> byGroupAndRoomAndParaAndWeekDay = lessonRepository.findByGroupAndRoomAndParaAndWeekDay(lessonDTO.getGroupId(), lessonDTO.getPara(), s);
+//        return byGroupAndRoomAndParaAndWeekDay.isPresent() ? byGroupAndRoomAndParaAndWeekDay.get() : null;
+//    }
 
-    private String generateWeekDay(String weekDay) {
+    private String generateWeekDay(Integer weekId) {
+        WeekDay weekDay = weekDayRepository.findById(weekId).orElseThrow();
         String weekDayReal = "";
-        switch (weekDay) {
+        switch (weekDay.getName().toString()) {
             case "DUSHANBA":
                 weekDayReal = "MONDAY";
                 break;

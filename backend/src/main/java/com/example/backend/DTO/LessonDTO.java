@@ -18,11 +18,11 @@ import java.util.UUID;
 @NoArgsConstructor
 @Builder
 public class LessonDTO {
-    private UUID subjectId;
-    @NotNull(message = "Para Cannot be null")
-    private Integer para;
+    private List<UUID> groupsIds;
+    private boolean lessonType;
+    private int para;
     private UUID roomId;
-    private UUID groupId;
+    private UUID subjectId;
     private UUID teacherId;
-    private String weekday;
+    private int weekId;
 }

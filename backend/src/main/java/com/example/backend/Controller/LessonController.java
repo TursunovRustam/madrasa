@@ -23,11 +23,15 @@ public class LessonController {
     public HttpEntity<?> getLesson(@PathVariable UUID groupId){
         return ResponseEntity.ok(lessonService.findByGroupId(groupId));
     }
-    @PostMapping("/{groupId}")
+    @PutMapping("/{groupId}")
     public HttpEntity<?> editLesson(@PathVariable UUID groupId,@RequestBody LessonDTO lessonDTO) {
         return lessonService.editLessonOfGroup(groupId,lessonDTO);
     }
 
+    @PostMapping()
+    private HttpEntity<?> addLesson(@RequestBody LessonDTO lessonDTO){
+        return lessonService.addLesson(lessonDTO);
+    }
 
 
 }
