@@ -18,7 +18,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @Builder
 public class LessonDTO {
-    private List<UUID> groupsIds;
+    private List<UUID> groupIds;
     private boolean lessonType;
     private int para;
     private UUID roomId;

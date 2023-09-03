@@ -28,8 +28,17 @@ public class LessonServiceImpl implements LessonService {
     private final WeekDayRepository weekDayRepository;
 
     @Override
-    public HttpEntity<?> addLesson(LessonDTO lesson) {
-        return ResponseEntity.ok("");
+    public HttpEntity<?> addLesson(LessonDTO lessonDTO, UUID currentGroup) {
+
+        Lesson lesson = Lesson.builder()
+                .weekDay(weekDayRepository.findById(lessonDTO.getWeekId()).orElseThrow())
+                .subject(subjectRepository.findById(lessonDTO.getSubjectId()).orElseThrow())
+                .teacher(teacherRepository.findById(lessonDTO.getTeacherId()).orElseThrow())
+                .group(lessonDTO.isLessonType()?groupRepository.findAllById(lessonDTO.getGroupIds()): List.of(groupRepository.findById(currentGroup).orElseThrow()))
+                .para(lessonDTO.getPara())
+                .room(roomRepository.findById(lessonDTO.getRoomId()).orElseThrow())
+                .type(lessonDTO.isLessonType()).build();
+        return ResponseEntity.ok(lessonRepository.save(lesson));
     }
 
     @Transactional

@@ -28,9 +28,10 @@ public class LessonController {
         return lessonService.editLessonOfGroup(groupId,lessonDTO);
     }
 
-    @PostMapping()
-    private HttpEntity<?> addLesson(@RequestBody LessonDTO lessonDTO){
-        return lessonService.addLesson(lessonDTO);
+    @PostMapping("/{currentGroup}")
+    private HttpEntity<?> addLesson(@RequestBody LessonDTO lessonDTO, @PathVariable UUID currentGroup){
+        System.out.println("HEllo");
+        return lessonService.addLesson(lessonDTO, currentGroup);
     }
 
 
